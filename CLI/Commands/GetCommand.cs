@@ -1,4 +1,5 @@
-﻿using Spectre.Console.Cli;
+﻿using JetBrains.Annotations;
+using Spectre.Console.Cli;
 
 namespace CLI.Commands;
 
@@ -6,7 +7,8 @@ internal sealed class GetCommand : Command<GetCommand.Settings>
 {
 #region Settings
 
-    internal abstract class Settings : CommandSettings { }
+    [UsedImplicitly]
+    internal sealed class Settings : CommandSettings { }
 
 #endregion
 
