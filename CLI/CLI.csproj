@@ -7,4 +7,11 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <ItemGroup>
+      <PackageReference Include="Spectre.Console" Version="0.50.1-preview.0.25" />
+      <PackageReference Include="Spectre.Console.Cli" Version="0.50.1-preview.0.21" />
+      <PackageReference Include="Spectre.Console.Json" Version="0.50.1-preview.0.25" />
+      <PackageReference Include="Spectre.Console.Testing" Version="0.50.1-preview.0.25" />
+    </ItemGroup>
+
 </Project>
