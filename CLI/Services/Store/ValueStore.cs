@@ -15,102 +15,115 @@ internal sealed class ValueStore(
     public string? FetchOne(
         string key
     ) {
-        var filepath = secretsFileSupplier.GetKeyStoreDirectory();
-        using var mutex = lockFactory.Create(filepath);
+        var filePath = secretsFileSupplier.GetKeyStoreDirectory();
+        using var mutex = lockFactory.Create(filePath);
 
         mutex.Acquire();
-        var secrets = LoadSecrets(filepath);
-        mutex.Release();
-
-        return secrets.Result.GetValueOrDefault(key);
+        try {
+            var secrets = LoadSecrets(filePath);
+            return secrets.GetValueOrDefault(key);
+        }
+        finally {
+            mutex.Release();
+        }
     }
 
 
     public IReadOnlyDictionary<string, string> FetchAll() {
-        var filepath = secretsFileSupplier.GetKeyStoreDirectory();
-        using var mutex = lockFactory.Create(filepath);
+        var filePath = secretsFileSupplier.GetKeyStoreDirectory();
+        using var mutex = lockFactory.Create(filePath);
 
         mutex.Acquire();
-        var secrets = LoadSecrets(filepath);
-        mutex.Release();
-
-        return secrets.Result;
+        try {
+            var secrets = LoadSecrets(filePath);
+            return secrets;
+        }
+        finally {
+            mutex.Release();
+        }
     }
 
 
     public void Upsert(
         string key, string value
     ) {
-        var filepath = secretsFileSupplier.GetKeyStoreDirectory();
-        using var mutex = lockFactory.Create(filepath);
+        var filePath = secretsFileSupplier.GetKeyStoreDirectory();
+        using var mutex = lockFactory.Create(filePath);
 
         mutex.Acquire();
+        try {
+            var secrets = LoadSecrets(filePath);
+            secrets[key] = value;
 
-        var secrets = LoadSecrets(filepath);
-        secrets.Result[key] = value;
-
-        SaveSecrets(filepath, secrets.Result);
-
-        mutex.Release();
+            SaveSecrets(filePath, secrets);
+        }
+        finally {
+            mutex.Release();
+        }
     }
 
 
     public void Delete(
         string key
     ) {
-        var filepath = secretsFileSupplier.GetKeyStoreDirectory();
-        using var mutex = lockFactory.Create(filepath);
+        var filePath = secretsFileSupplier.GetKeyStoreDirectory();
+        using var mutex = lockFactory.Create(filePath);
 
         mutex.Acquire();
-        var secrets = LoadSecrets(filepath);
-        if (secrets.Result.Remove(key)) {
-            SaveSecrets(filepath, secrets.Result);
+        try {
+            var secrets = LoadSecrets(filePath);
+            if (secrets.Remove(key)) {
+                SaveSecrets(filePath, secrets);
+            }
         }
-
-        ;
-
-        mutex.Release();
+        finally {
+            mutex.Release();
+        }
     }
 
 
     public void Destroy() {
-        var filepath = secretsFileSupplier.GetKeyStoreDirectory();
-        using var mutex = lockFactory.Create(filepath);
+        var filePath = secretsFileSupplier.GetKeyStoreDirectory();
+        using var mutex = lockFactory.Create(filePath);
 
         mutex.Acquire();
-        SaveSecrets(filepath, new Dictionary<string, string>());
-        mutex.Release();
+        try {
+            SaveSecrets(filePath, new Dictionary<string, string>());
+        }
+        finally {
+            mutex.Release();
+        }
     }
 
 #endregion
 
 #region Internals
 
-    private async Task<Dictionary<string, string>> LoadSecrets(
-        string filepath
+    private Dictionary<string, string> LoadSecrets(
+        string filePath
     ) {
-        if (!File.Exists(filepath)) {
+        if (!File.Exists(filePath)) {
             return new Dictionary<string, string>();
         }
 
-        var secretsJson = await File.ReadAllTextAsync(filepath);
+        var secretsJson = File.ReadAllText(filePath);
         var secretsDict = serializer.Deserialize(secretsJson);
         return secretsDict;
     }
 
 
     private void SaveSecrets(
-        string filepath, Dictionary<string, string> secretsDict
+        string filePath, Dictionary<string, string> secretsDict
     ) {
-        var secretsFile = $"{filepath}.tmp";
+        var secretsFile = $"{filePath}.tmp";
         var secretsJson = serializer.Serialize(secretsDict);
         File.WriteAllText(secretsFile, secretsJson);
 
-        if (File.Exists(filepath)) {
-            File.Replace(secretsFile, filepath, null);
+        if (File.Exists(filePath)) {
+            File.Replace(secretsFile, filePath, null);
         }
         else {
-            File.Move(secretsFile, filepath);
+            File.Move(secretsFile, filePath);
         }
     }
 
