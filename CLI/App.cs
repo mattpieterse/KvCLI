@@ -56,7 +56,6 @@ internal abstract class App
 
         // Dependency Injection (DI)
         builder.ConfigureServices(static (_, services) => {
-            services.AddSingleton<ILock, FileMutexLock>();
             services.AddSingleton<ILockFactory, FileMutexLockFactory>();
             services.AddSingleton<ISecretsFileSupplier, LocalSecretsFileSupplier>();
             services.AddSingleton<IKeyValueSerializer, JsonKeyValueSerializer>();
