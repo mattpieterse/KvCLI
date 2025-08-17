@@ -1,9 +1,14 @@
-﻿using JetBrains.Annotations;
+﻿using CLI.Services.Store;
+using JetBrains.Annotations;
+using Spectre.Console;
 using Spectre.Console.Cli;
 
 namespace CLI.Commands;
 
-internal sealed class ClearCommand : Command<ClearCommand.Settings>
+[UsedImplicitly]
+internal sealed class ClearCommand(
+    ValueStore kvStore
+) : Command<ClearCommand.Settings>
 {
 #region Settings
 
@@ -14,8 +19,13 @@ internal sealed class ClearCommand : Command<ClearCommand.Settings>
 
 #region Function
 
-    public override int Execute(CommandContext context, Settings settings)
-        => throw new NotImplementedException();
+    public override int Execute(
+        CommandContext context, Settings settings
+    ) {
+        kvStore.Destroy();
+        AnsiConsole.MarkupLine("[green]KeyStore wiped successfully.[/]");
+        return 0;
+    }
 
 #endregion
 }
