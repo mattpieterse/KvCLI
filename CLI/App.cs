@@ -26,9 +26,9 @@ internal abstract class App
     /// to execute commands with arguments.
     /// </param>
     /// <returns>
-    /// <see cref="Environment.ExitCode"/>
+    /// <see cref="Environment.ExitCode"/> (<see cref="int"/>)
     /// </returns>
-    private static void Main(string[] args) {
+    private static int Main(string[] args) {
         var app = Configure(args).BuildApplication();
 
         // Application Configuration
@@ -44,7 +44,7 @@ internal abstract class App
             options.AddCommand<ClearCommand>("clear");
         }));
 
-        app.Run(args);
+        return app.Run(args);
     }
 
 #endregion
