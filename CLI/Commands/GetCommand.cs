@@ -27,9 +27,9 @@ internal sealed class GetCommand(
         CommandContext context, Settings settings
     ) {
         var value = kvStore.FetchOne(settings.Key);
-        AnsiConsole.MarkupLineInterpolated((value == null)
-            ? (FormattableString) $"[red]Could not find a value associated with [{settings.Key}][/]"
-            : (FormattableString) $"[green]FetchOne >> {settings.Key}=[{value}][/]");
+        AnsiConsole.MarkupLine((value == null)
+            ? $"[red]Could not find a value associated with {settings.Key}[/]"
+            : $"[green]{value}[/]");
 
         return 0;
     }

@@ -27,7 +27,7 @@ internal sealed class PopCommand(
         CommandContext context, Settings settings
     ) {
         kvStore.Delete(settings.Key);
-        AnsiConsole.MarkupLineInterpolated($"[green]Delete >> [{settings.Key}][/]");
+        AnsiConsole.MarkupLine($"[green]Delete >> {settings.Key}[/]");
         return 0;
     }
 

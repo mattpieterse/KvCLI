@@ -31,7 +31,7 @@ internal sealed class SetCommand(
         CommandContext context, Settings settings
     ) {
         kvStore.Upsert(settings.Key, settings.Value);
-        AnsiConsole.MarkupLineInterpolated($"[green]Upsert >> {settings.Key}=[{settings.Value}][/]");
+        AnsiConsole.MarkupLine($"[green]Upsert >> {settings.Key}={settings.Value}[/]");
         return 0;
     }
 
