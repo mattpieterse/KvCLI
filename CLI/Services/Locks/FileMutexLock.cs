@@ -15,10 +15,12 @@ internal sealed class FileMutexLock : ILock
 
     public FileMutexLock(string filepath) {
         var hash = Convert.ToHexString(
-            SHA1.HashData(Encoding.UTF8.GetBytes(filepath))
+            SHA256.HashData(Encoding.UTF8.GetBytes(filepath))
         );
 
-        _mutex = new Mutex(false, $"Global\\KvStore_{hash}");
+        _mutex = new Mutex(
+            initiallyOwned: false, $"{OsSpecificMutex()}KvStore_{hash}"
+        );
     }
 
 #endregion
@@ -37,6 +39,16 @@ internal sealed class FileMutexLock : ILock
 
     public void Dispose() {
         _mutex.Dispose();
+    }
+
+#endregion
+
+#region Internals
+
+    private static string OsSpecificMutex() {
+        return OperatingSystem.IsWindows()
+            ? @"Global\"
+            : string.Empty;
     }
 
 #endregion
