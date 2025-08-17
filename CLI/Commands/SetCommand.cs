@@ -21,6 +21,10 @@ internal sealed class SetCommand(
 
         [CommandArgument(1, "<VALUE>")]
         public string Value { get; set; } = string.Empty;
+
+
+        [CommandArgument(2, "<SILENT>")]
+        public string Silent { get; set; } = string.Empty;
     }
 
 #endregion
@@ -41,7 +45,10 @@ internal sealed class SetCommand(
         CommandContext context, Settings settings
     ) {
         kvStore.Upsert(settings.Key, settings.Value);
-        AnsiConsole.MarkupLine($"[green]Upsert >> {settings.Key}={settings.Value}[/]");
+        if (settings.Silent != "--silent") {
+            AnsiConsole.MarkupLine($"[green]Upsert >> {settings.Key}={settings.Value}[/]");
+        }
+
         return (int) ExitCode.Success;
     }
 
