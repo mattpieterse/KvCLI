@@ -1,9 +1,16 @@
-﻿using JetBrains.Annotations;
+﻿using CLI.Services.Serialization;
+using CLI.Services.Store;
+using JetBrains.Annotations;
+using Spectre.Console;
 using Spectre.Console.Cli;
 
 namespace CLI.Commands;
 
-internal sealed class ListCommand : Command<ListCommand.Settings>
+[UsedImplicitly]
+internal sealed class ListCommand(
+    ValueStore kvStore,
+    IKeyValueSerializer serializer
+) : Command<ListCommand.Settings>
 {
 #region Settings
 
@@ -14,8 +21,14 @@ internal sealed class ListCommand : Command<ListCommand.Settings>
 
 #region Function
 
-    public override int Execute(CommandContext context, Settings settings)
-        => throw new NotImplementedException();
+    public override int Execute(
+        CommandContext context, Settings settings
+    ) {
+        var secrets = kvStore.FetchAll();
+        var product = serializer.Serialize(secrets.ToDictionary());
+        AnsiConsole.WriteLine(product);
+        return 0;
+    }
 
 #endregion
 }
