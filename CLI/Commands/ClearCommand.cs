@@ -17,6 +17,16 @@ internal sealed class ClearCommand(
 
 #endregion
 
+#region ExitCode
+
+    private enum ExitCode
+    {
+        Success = 0,
+        Failure = 1,
+    }
+
+#endregion
+
 #region Function
 
     public override int Execute(
@@ -24,7 +34,7 @@ internal sealed class ClearCommand(
     ) {
         kvStore.Destroy();
         AnsiConsole.MarkupLine("[green]KeyStore wiped successfully.[/]");
-        return 0;
+        return (int) ExitCode.Success;
     }
 
 #endregion

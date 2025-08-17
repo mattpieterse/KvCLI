@@ -19,6 +19,16 @@ internal sealed class ListCommand(
 
 #endregion
 
+#region ExitCode
+
+    private enum ExitCode
+    {
+        Success = 0,
+        Failure = 1,
+    }
+
+#endregion
+
 #region Function
 
     public override int Execute(
@@ -27,7 +37,7 @@ internal sealed class ListCommand(
         var secrets = kvStore.FetchAll();
         var product = serializer.Serialize(secrets.ToDictionary());
         AnsiConsole.WriteLine(product);
-        return 0;
+        return (int) ExitCode.Success;
     }
 
 #endregion

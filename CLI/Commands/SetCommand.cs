@@ -25,6 +25,16 @@ internal sealed class SetCommand(
 
 #endregion
 
+#region ExitCode
+
+    private enum ExitCode
+    {
+        Success = 0,
+        Failure = 1,
+    }
+
+#endregion
+
 #region Function
 
     public override int Execute(
@@ -32,7 +42,7 @@ internal sealed class SetCommand(
     ) {
         kvStore.Upsert(settings.Key, settings.Value);
         AnsiConsole.MarkupLine($"[green]Upsert >> {settings.Key}={settings.Value}[/]");
-        return 0;
+        return (int) ExitCode.Success;
     }
 
 #endregion

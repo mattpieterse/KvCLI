@@ -21,6 +21,16 @@ internal sealed class PopCommand(
 
 #endregion
 
+#region ExitCode
+
+    private enum ExitCode
+    {
+        Success = 0,
+        Failure = 1,
+    }
+
+#endregion
+
 #region Function
 
     public override int Execute(
@@ -28,7 +38,7 @@ internal sealed class PopCommand(
     ) {
         kvStore.Delete(settings.Key);
         AnsiConsole.MarkupLine($"[green]Delete >> {settings.Key}[/]");
-        return 0;
+        return (int) ExitCode.Success;
     }
 
 #endregion

@@ -21,6 +21,16 @@ internal sealed class GetCommand(
 
 #endregion
 
+#region ExitCode
+
+    private enum ExitCode
+    {
+        Success = 0,
+        Failure = 1,
+    }
+
+#endregion
+
 #region Function
 
     public override int Execute(
@@ -31,7 +41,7 @@ internal sealed class GetCommand(
             ? $"[red]Could not find a value associated with {settings.Key}[/]"
             : $"[green]{value}[/]");
 
-        return 0;
+        return (int) ExitCode.Success;
     }
 
 #endregion
