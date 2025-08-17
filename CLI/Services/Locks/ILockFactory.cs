@@ -1,6 +1,6 @@
 ﻿namespace CLI.Services.Locks;
 
-public interface ILockFactory
+internal interface ILockFactory
 {
 #region Contracts
 

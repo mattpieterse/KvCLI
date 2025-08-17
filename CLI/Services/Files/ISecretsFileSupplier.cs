@@ -1,6 +1,6 @@
 ﻿namespace CLI.Services.Files;
 
-public interface ISecretsFileSupplier
+internal interface ISecretsFileSupplier
 {
 #region Contracts
 

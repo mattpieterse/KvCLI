@@ -1,6 +1,6 @@
 ﻿namespace CLI.Services.Locks;
 
-public class FileMutexLockFactory : ILockFactory
+internal sealed class FileMutexLockFactory : ILockFactory
 {
 #region Factory
 

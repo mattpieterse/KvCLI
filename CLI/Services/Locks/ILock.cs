@@ -1,6 +1,6 @@
 ﻿namespace CLI.Services.Locks;
 
-public interface ILock : IDisposable
+internal interface ILock : IDisposable
 {
 #region Contracts
 

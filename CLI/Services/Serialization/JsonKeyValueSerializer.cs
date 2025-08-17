@@ -2,7 +2,7 @@
 
 namespace CLI.Services.Serialization;
 
-public class JsonKeyValueSerializer : IKeyValueSerializer
+internal sealed class JsonKeyValueSerializer : IKeyValueSerializer
 {
 #region Functions
 

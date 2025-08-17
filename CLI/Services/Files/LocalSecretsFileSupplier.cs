@@ -1,6 +1,6 @@
 ﻿namespace CLI.Services.Files;
 
-public class LocalSecretsFileSupplier : ISecretsFileSupplier
+internal sealed class LocalSecretsFileSupplier : ISecretsFileSupplier
 {
 #region Functions
 
